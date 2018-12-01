@@ -36,3 +36,14 @@
 (prn (str "Exempel 3: " (getDupe [-6 3 8  5 -6]) " = 5"))
 (prn (str "Exempel 4: " (getDupe [7 7 -2 -7 -4]) " = 14")) 
 (prn (str "Answer task 2: " (getDupe adventOfCodeFrequency)))    
+
+; OUTPUT:
+; "Passed 1 test"
+; "Passed 2 test"
+; "Passed 3 test"
+; "Answer task 1: 479"
+; "Exempel 1: 0 = 0"
+; "Exempel 2: 10 = 10"
+; "Exempel 3: 5 = 5"
+; "Exempel 4: 14 = 14"
+; "Answer task 2: 66105"
