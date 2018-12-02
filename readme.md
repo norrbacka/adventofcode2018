@@ -1,0 +1,1 @@
+My first experience coding with Clojure, then what is better than Advent of Code? Nothing! Hopefully I will survive atleast the first week.
