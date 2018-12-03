@@ -1,16 +1,35 @@
+(set-env! 
+    :dependencies '[[net.mikera/core.matrix "0.62.0"]]
+)
+
 (ns boot.user
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str])
+  (:require [clojure.core.matrix :as matrix])
+)
 
 (defn abs [n] (max n (-' n)))
 (defn coord [[x y dx dy]] [x y (+ x dx) (+ y dy)])
+(defn indexes [[x y w h]] 
+    (for [i (range w) j (range h)] 
+        [(+ i x) (+ j y)]
+    )
+)
 
 (def exampleFabric (vec (replicate 8 (vec (replicate 8 0)))))
 (def example1 (coord [1 3 4 4]))
 (def example2 (coord [3 1 4 4]))
 (def example3 (coord [5 5 4 4]))
-(def input(map coord (map read-string (str/split-lines(slurp "input.txt")))))
-
+(def input(vec(map read-string (str/split-lines(slurp "input.txt")))))
 (def fabric (vec (replicate 1000 (vec (replicate 1000 0)))))
+
+(def allCords (apply merge (map #(indexes %) input)))
+(def frequenced (map frequencies allCords))
+
+(def filtered (filter some? (map (fn [s] (set {:cord (first s) :count (count s)})) allCords)))
+
+; (filter #(= % [31 117]) (vec(merge allCords)))
+
+;;(count (filter some? (map (fn [s] (if (> (count s) 2) [(first s) (count s)])) allCords)))
 
 
 (defn add-vec [& args] 
