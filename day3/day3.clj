@@ -9,9 +9,12 @@
 
 (defn abs [n] (max n (-' n)))
 (defn coord [[x y dx dy]] [x y (+ x dx) (+ y dy)])
-(defn indexes [[x y w h]] 
-    (for [i (range w) j (range h)] 
-        [(+ i x) (+ j y)]
+
+(defn indexes
+  [[x y w h]]
+    (for [i (range x (+ x w))
+          j (range y (+ y h))]
+      [i j]
     )
 )
 
@@ -22,10 +25,19 @@
 (def input(vec(map read-string (str/split-lines(slurp "input.txt")))))
 (def fabric (vec (replicate 1000 (vec (replicate 1000 0)))))
 
-(def allCords (apply merge (map #(indexes %) input)))
-(def frequenced (map frequencies allCords))
+; (def allCords (apply merge (map #(indexes %) input)))
 
-(def filtered (filter some? (map (fn [s] (set {:cord (first s) :count (count s)})) allCords)))
+
+; (def filtered (filter some? (map (fn [s] (set {:cord (first s) :count (count s)})) allCords)))
+
+(def frequenced (mapcat frequencies (mapv #(indexes %) input)))
+
+(def countOverlaps
+    (count(filter (fn [n] (> n 1)) (vals frequenced)))
+)
+
+;106501 TODO: fixa input som är fel med linebreaks!
+
 
 ; (filter #(= % [31 117]) (vec(merge allCords)))
 
