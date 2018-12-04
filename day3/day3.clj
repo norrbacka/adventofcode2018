@@ -18,16 +18,55 @@
         (edn/read-string)        
     )
 )
-(def coordinates
+(defn coordinates
+    [j]
     (->> 
-        (map #(indexes %) puzzle)
+        (map #(indexes %) j)
         (flatten)
         (partition 2)
     )
 )
-(def frequenced (frequencies coordinates))
+(def frequenced (frequencies (coordinates puzzle)))
 (def countOverlaps
     (count(filter (fn [n] (> n 1)) (vals frequenced)))
 )
 
-(prn (str "Answer task 1: " countOverlaps))
+;;(prn (str "Answer task 1: " countOverlaps))
+
+
+(defn isLonely?
+    [otherFrequencies others]
+    (let [fco (frequencies (coordinates others))] fco)
+        ;;[let filtered (filter (fn [[xy v]] (> v 1)) fco)]
+        ;;(if (> (count(filter (fn [v1] (= v1 value) filtered)) 0)) value nil)
+)
+
+;loopa igenom puzzle
+;för varje värde räkna fram indexes
+;för alla andra värden räkna fram indexes
+;kolla att alla index-värden saknas i resten
+
+(defn removeAt
+    [puzzle i]
+      (concat (subvec puzzle 0 i)
+          (subvec puzzle (inc i)))
+)
+
+(defn FindLonely
+    [p]
+    (for [i (range (count p))]
+        (let 
+            [
+                c(nth p i)
+                removedPuzzle(removeAt p i)
+                c2(coordinates removedPuzzle)
+            ]
+            (if (every?
+                (fn [coordinate] (not(contains? [c2] coordinate)))
+                c
+            ) i nil)     
+        )
+    )
+)
+
+(FindLonely puzzle)
