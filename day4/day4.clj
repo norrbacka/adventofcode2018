@@ -23,18 +23,21 @@
 
 (defn parseData 
     [data]
-    (map 
-        (fn [d] into {} [
-            [
-                :dateTime (->>
+    (map
+        (fn [d] (apply assoc {} [
+                :time (->>
                     (clojure.string/replace (str (nth (re-find #"\[(.*?)\]" d) 1)) #"\ " "T")
                     (coerce/from-string)
                 )
                 :guard (nth (re-find  #"\#(\d{0,6})" d) 1)
                 :wake (if (empty? (re-find  #"wake" d)) false true)
                 :sleep (if (empty? (re-find  #"sleep" d)) false true)
-            ]
-        ])
+            ])
+        )
         data
     )
 )
+
+(def parsedData (parseData input))
+(def sortedParsedData (sort-by (fn [v] (-> v :time)) t/before? parsedData))
+
