@@ -40,4 +40,33 @@
 
 (def parsedData (parseData input))
 (def sortedParsedData (sort-by (fn [v] (-> v :time)) t/before? parsedData))
+(def guards (filter distinct? (filter some? (map :guard parsedData))))
+(def guardsSleepMin
+    (map
+        (fn [guard] (apply assoc {} [
+            :guard (str guard)
+            :sleepMin 0
+        ])
+        )
+        guards
+    )
+)
 
+(defn updateGuardsSleepMin
+    [gsm] ;guardsSleepMin  
+    (for [i (range (count sortedParsedData))]
+        (let [
+                d(nth sortedParsedData i)
+                g(
+                    (if 
+                        (some? (-> d :guard))
+                        (-> d :guard) 
+                        g                    
+                    )
+                )
+            ]
+            (prn g) 
+        )
+    )
+)
+(updateGuardsSleepMin [guardsSleepMin])
