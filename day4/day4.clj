@@ -23,18 +23,50 @@
 
 (defn parseData 
     [data]
-    (map 
-        (fn [d] into {} [
-            [
-                :dateTime (->>
+    (map
+        (fn [d] (apply assoc {} [
+                :time (->>
                     (clojure.string/replace (str (nth (re-find #"\[(.*?)\]" d) 1)) #"\ " "T")
                     (coerce/from-string)
                 )
                 :guard (nth (re-find  #"\#(\d{0,6})" d) 1)
                 :wake (if (empty? (re-find  #"wake" d)) false true)
                 :sleep (if (empty? (re-find  #"sleep" d)) false true)
-            ]
-        ])
+            ])
+        )
         data
     )
 )
+
+(def parsedData (parseData input))
+(def sortedParsedData (sort-by (fn [v] (-> v :time)) t/before? parsedData))
+(def guards (filter distinct? (filter some? (map :guard parsedData))))
+(def guardsSleepMin
+    (map
+        (fn [guard] (apply assoc {} [
+            :guard (str guard)
+            :sleepMin 0
+        ])
+        )
+        guards
+    )
+)
+
+(defn updateGuardsSleepMin
+    [gsm] ;guardsSleepMin  
+    (for [i (range (count sortedParsedData))]
+        (let [
+                d(nth sortedParsedData i)
+                g(
+                    (if 
+                        (some? (-> d :guard))
+                        (-> d :guard) 
+                        g                    
+                    )
+                )
+            ]
+            (prn g) 
+        )
+    )
+)
+(updateGuardsSleepMin [guardsSleepMin])
